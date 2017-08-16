@@ -1,6 +1,6 @@
 {
   "name": "react-native-timekeeper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A beutiful timekeeper countdown animated for React Native",
   "main": "index.js",
   "repository": "https://github.com/Yamilquery/react-native-timekeeper.git",
