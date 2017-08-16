@@ -12,6 +12,8 @@ Timekeeper is the most complete and lightweight component for React-Native that 
   - Enable/disable pausable timer
   - Apply your own callbacks on pausing, on resuming, or time elapsed
 
+  ![](http://i.imgur.com/6KXN7jG.png =250x)
+
 ### Installation
 
 ```sh
