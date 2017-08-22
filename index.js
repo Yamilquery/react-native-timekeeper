@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 // import { getInitialState } from './common';
-import TextTimeComponent from './timerText';
+import TextTimeComponent, { getInitialStateText } from './timerText';
 
 // TODO: RESOLVE NATIVE MODULE CANNOT BE NULL
 // import BackgroundTask from 'react-native-background-task';
@@ -66,7 +66,7 @@ type Props = {
   onResume: Function,  // opt
   onTimeElapsed: Function,  // opt
   radius: number,
-  reverseCount?: boolean,
+  reverseCount: boolean,
   seconds: number,
   shadowColor: string,  // opt
   subTextStyle: Text.propTypes.style,
@@ -239,7 +239,7 @@ export default class PercentageCircle extends React.Component<Default, Props, St
     const active = !this.state.active;
     //onPause
     this.setState({
-      ...getInitialState(this.props),
+      ...getInitialStateText(this.props),
       active,
     }, () => {
       if (active){

@@ -21,8 +21,8 @@ type Props = {
   active: boolean,
   isPausable?: boolean,
   onTimeElapsed: Function,
-  reverseCount?: boolean,
-  // seconds: number,
+  reverseCount: boolean,
+  seconds: number,
   subTextStyle: StyleSheet.Styles | Array<StyleSheet.Styles>,
   textStyle: StyleSheet.Styles | Array<StyleSheet.Styles>,
 }
@@ -57,7 +57,7 @@ const secondsToHms = (rd: number): string => {
   return `${mDisplay}:${sDisplay}`;
 };
 
-function getInitialStateText(props: any): State {
+export function getInitialStateText(props: Props): State {
   const timeProgress = new Animated.Value(0);
   return {
     timeProgress,
