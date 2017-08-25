@@ -217,6 +217,10 @@ export default class PercentageCircle extends React.Component<Default, Props, St
     this.setState(getInitialState(nextProps), this.restartAnimation);
   }
 
+  shouldComponentUpdate() {
+    return false;
+  }
+
   restartAnimation = (): void => {
     let self = this;
     self.state.circleProgress.stopAnimation();
