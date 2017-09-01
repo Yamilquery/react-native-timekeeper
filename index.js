@@ -51,27 +51,27 @@ const styles = StyleSheet.create({
 });
 
 
-type Props = {
+export type TimerProps = {
   beat: boolean,  // opt
-  bgColor: string,  // opt
-  bgColorSecondary: string,  // opt
-  bgColorThirt: string,  // opt
-  borderWidth: number,  // opt
-  color: string,  // opt
-  containerStyle: ViewPropTypesStyle,
-  isPausable: boolean,  // opt
-  maxScale: number,  // opt
-  minScale: number,  // opt
-  onPause: Function,  // opt
-  onResume: Function,  // opt
-  onTimeElapsed: Function,  // opt
+  bgColor?: string,  // opt
+  bgColorSecondary?: string,  // opt
+  bgColorThirt?: string,  // opt
+  borderWidth?: number,  // opt
+  color?: string,  // opt
+  containerStyle?: ViewPropTypesStyle,
+  isPausable?: boolean,  // opt
+  maxScale?: number,  // opt
+  minScale?: number,  // opt
+  onPause?: Function,  // opt
+  onResume?: Function,  // opt
+  onTimeElapsed?: Function,  // opt
   radius: number,
   reverseCount: boolean,
-  seconds: number,
-  shadowColor: string,  // opt
-  subTextStyle: Text.propTypes.style,
-  textStyle: Text.propTypes.style,
-  updateText: Function,  // opt
+  seconds?: number,
+  shadowColor?: string,  // opt
+  subTextStyle?: Text.propTypes.style,
+  textStyle?: Text.propTypes.style,
+  updateText?: Function,  // opt
 };
 
 type Default = {
@@ -145,7 +145,7 @@ function calcInterpolationValuesForHalfCircle2(animatedValue, { color, shadowCol
   return { rotate, backgroundColor };
 }
 
-function getInitialState(props: Props) {
+function getInitialState(props: TimerProps) {
   const circleProgress = new Animated.Value(0);
   const circleProgressX2 = new Animated.Value(0);
   return {
@@ -175,8 +175,8 @@ function getInitialState(props: Props) {
   };
 }
 
-export default class PercentageCircle extends React.Component<Default, Props, State> {
-  static defaultProps = {
+export default class PercentageCircle extends React.Component<Default, TimerProps, State> {
+  static defaultProps: Default = {
     beat: false,
     bgColor: '#e9e9ef',
     bgColorSecondary: '#e9e9ef',
@@ -198,15 +198,7 @@ export default class PercentageCircle extends React.Component<Default, Props, St
     textStyle: null,
     updateText: (elapsed, total) => ((total - elapsed).toString()),
   }
-
-  constructor(props: Props) {
-    super(props);
-    this.state = getInitialState(props);
-    //
-    // if (Platform.OS === 'android') {
-    //   UIManager.setLayoutAnimationEnabledExperimental(true);
-    // }
-  }
+  state: State = getInitialState(this.props);
 
   componentDidMount(): void {
     this.beat();
@@ -218,7 +210,7 @@ export default class PercentageCircle extends React.Component<Default, Props, St
   }
 
   restartAnimation = (): void => {
-    let self = this;
+    const self = this;
     self.state.circleProgress.stopAnimation();
     self.state.circleProgressX2.stopAnimation();
 
@@ -237,13 +229,13 @@ export default class PercentageCircle extends React.Component<Default, Props, St
 
   toogleAnimation(): void {
     const active = !this.state.active;
-    //onPause
+    // onPause
     this.setState({
       ...getInitialStateText(this.props),
       active,
     }, () => {
-      if (active){
-        if (parseFloat(JSON.stringify(this.state.bounceValue)) == this.props.minScale){
+      if (active) {
+        if (parseFloat(JSON.stringify(this.state.bounceValue)) == this.props.minScale) {
           this.beat();
           this.props.onResume.call(this);
         }
@@ -259,14 +251,14 @@ export default class PercentageCircle extends React.Component<Default, Props, St
           {
             duration: 272.5,
             toValue: this.props.maxScale,
-          }
+          },
         ),
         Animated.timing(
           this.state.bounceValue,
           {
             duration: 272.5,
             toValue: this.props.minScale,
-          }
+          },
         ),
       ]).start(() => {
         this.state.bounceValue.stopAnimation();
