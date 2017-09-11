@@ -8,6 +8,10 @@ import {
   View,
 } from 'react-native';
 
+// const ViewPropTypesStyle = ViewPropTypes
+//   ? ViewPropTypes.style
+//   : View.propTypes.style;
+
 const styles = StyleSheet.create({
   textBase: {
     alignItems: 'center',
@@ -23,8 +27,8 @@ type Props = {
   onTimeElapsed: Function,
   reverseCount: boolean,
   seconds: number,
-  subTextStyle: StyleSheet.Styles | Array<StyleSheet.Styles>,
-  textStyle: StyleSheet.Styles | Array<StyleSheet.Styles>,
+  subTextStyle: Text.propTypes.style | Array<Text.propTypes.style>,
+  textStyle: Text.propTypes.style | Array<Text.propTypes.style>,
 }
 
 type Default = {
@@ -32,8 +36,8 @@ type Default = {
   isPausable: boolean,
   onTimeElapsed: Function,
   seconds: number,
-  subTextStyle: StyleSheet.Styles | Array<StyleSheet.Styles>,
-  textStyle: StyleSheet.Styles | Array<StyleSheet.Styles>,
+  subTextStyle: Text.propTypes.style | Array<Text.propTypes.style>,
+  textStyle: Text.propTypes.style | Array<Text.propTypes.style>,
 }
 
 type State = {

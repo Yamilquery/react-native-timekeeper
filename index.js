@@ -3,15 +3,17 @@ import * as React from 'react';
 import {
   Animated,
   Easing,
-  StyleSheet,
+  NativeModules,
   Text,
   TouchableOpacity,
   View,
   ViewPropTypes,
 } from 'react-native';
 
-// import { getInitialState } from './common';
-import TextTimeComponent, { getInitialStateText } from './timerText';
+import TextTimeComponent from './timerText';
+import styles from './styles';
+
+const { UIManager } = NativeModules;
 
 // TODO: RESOLVE NATIVE MODULE CANNOT BE NULL
 // import BackgroundTask from 'react-native-background-task';
@@ -21,36 +23,6 @@ import TextTimeComponent, { getInitialStateText } from './timerText';
 //   BackgroundTask.finish();
 // });
 
-const ViewPropTypesStyle = ViewPropTypes
-  ? ViewPropTypes.style
-  : View.propTypes.style;
-
-const styles = StyleSheet.create({
-  outerCircle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e3e3e3',
-  },
-  innerCircle: {
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  leftWrap: {
-    position: 'absolute',
-    top: 0,
-  },
-  halfCircle: {
-    position: 'absolute',
-    top: 0,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    backgroundColor: '#f00',
-  },
-});
-
-
 export type TimerProps = {
   beat: boolean,  // opt
   bgColor?: string,  // opt
@@ -58,7 +30,7 @@ export type TimerProps = {
   bgColorThirt?: string,  // opt
   borderWidth?: number,  // opt
   color?: string,  // opt
-  containerStyle?: ViewPropTypesStyle,
+  containerStyle?: ViewPropTypes.style,
   isPausable?: boolean,  // opt
   maxScale?: number,  // opt
   minScale?: number,  // opt
@@ -81,13 +53,14 @@ type Default = {
   bgColorThirt: string,  // opt
   borderWidth: number,  // opt
   color: string,  // opt
-  containerStyle: ViewPropTypesStyle,
+  containerStyle: ViewPropTypes.style,
   isPausable: boolean,  // opt
   maxScale: number,  // opt
   minScale: number,  // opt
   onPause: Function,  // opt
   onResume: Function,  // opt
   onTimeElapsed: Function,  // opt
+  reverseCount: boolean,
 
   shadowColor: string,  // opt
   subTextStyle: Text.propTypes.style,
@@ -106,7 +79,7 @@ type State = {
   interpolationValuesHalfCircle1: any,
   interpolationValuesHalfCircle2: any,
   secondsElapsed: number,
-  text: string,
+  text: number,
   timerScale: any,
   w1Anim: any,
   w2Anim: any,
@@ -145,7 +118,7 @@ function calcInterpolationValuesForHalfCircle2(animatedValue, { color, shadowCol
   return { rotate, backgroundColor };
 }
 
-function getInitialState(props: TimerProps) {
+function getInitialState(props: TimerProps): State {
   const circleProgress = new Animated.Value(0);
   const circleProgressX2 = new Animated.Value(0);
   return {
@@ -171,7 +144,6 @@ function getInitialState(props: TimerProps) {
     h2Anim: new Animated.Value(0),
     bounceValue: new Animated.Value(0),
     timerScale: new Animated.Value(1),
-    active: true,
   };
 }
 
@@ -186,8 +158,8 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
     color: '#f00',
     containerStyle: null,
     isPausable: false,
-    maxScale: 1.2,
-    minScale: 0.9,
+    maxScale: 1,
+    minScale: 0.7,
     onPause: () => null,
     onResume: () => null,
     onTimeElapsed: () => null,
@@ -196,16 +168,42 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
     shadowColor: '#999',
     subTextStyle: null,
     textStyle: null,
-    updateText: (elapsed, total) => ((total - elapsed).toString()),
+    updateText: (elapsed, total) => (total - elapsed),
   }
-  state: State = getInitialState(this.props);
 
+  state: State = {
+    ...getInitialState(this.props),
+    active: true,
+  };
+
+  /**
+   * Component will mount. Start the animation layout in Android
+   * @returns {void}
+   */
+  componentWillMount(): void {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }
+
+  /**
+   * Component did mount. Execute initial functions for animations.
+   * @returns {void}
+   */
   componentDidMount(): void {
     this.beat();
     this.restartAnimation();
   }
 
-  shouldComponentUpdate() {
+  /**
+   * Should component update. Prevent any kind of rerender in the component.
+   * If we don't do this, the timer would restart.
+   * @param {TimerProps} nextProps The next props of the component
+   * @param {State} nextState The next state of the component
+   * @returns {void}
+   */
+  shouldComponentUpdate(nextProps, nextState) {
+    // return nextState.active !== this.state.active;
     return false;
   }
 
@@ -228,16 +226,13 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
   }
 
   toogleAnimation(): void {
-    const active = !this.state.active;
-    // onPause
-    this.setState({
-      ...getInitialStateText(this.props),
-      active,
-    }, () => {
+    this.setState({ active: !this.state.active }, () => {
+      const { active, bounceValue } = this.state;
+      const { minScale, onResume } = this.props;
       if (active) {
-        if (parseFloat(JSON.stringify(this.state.bounceValue)) == this.props.minScale) {
+        if (parseFloat(JSON.stringify(bounceValue)) === minScale) {
           this.beat();
-          this.props.onResume.call(this);
+          onResume();
         }
       }
     });
@@ -271,7 +266,7 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
     }
   }
 
-  renderCircle({ rotate, backgroundColor }: any): ?React$Element<any> {
+  renderCircle({ rotate }: any): ?React$Element<any> {
     const { radius } = this.props;
 
     return (
@@ -300,13 +295,14 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
           ]}
         >
           <View style={{
-            backgroundColor: '#FFF',
+            backgroundColor: '#333333',
+            // backgroundColor: '#FFF',
             borderColor: 'rgba(161, 26, 66, 1)',
             borderRadius: radius / 5,
-            borderWidth: (radius / 20),
+            borderWidth: radius / 20,
             height: radius / 5,
             left: radius - (radius / 16),
-            top: -(radius / 16),
+            top: 0 - (radius / 16),
             width: radius / 5,
           }}
           />
@@ -390,26 +386,30 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
       bounceValue,
       timerScale,
     } = this.state;
+    const innerRadius = this.props.radius * 2;
+    const middleRadius = innerRadius + 30;
+    const outerRadius = middleRadius + 30;
 
     return (
-      <Animated.View style={{
-        width: (this.props.radius * 2),
-        height: (this.props.radius * 2),
-        transform: [
-        { scale: timerScale },
-        ],
-      }}
+      // Beater animation
+      <Animated.View
+        style={{
+          width: outerRadius,
+          height: outerRadius,
+          transform: [
+          { scale: timerScale },
+          ],
+        }}
       >
+        {/* Outer beater animation */}
         <Animated.View
           style={[
             styles.outerCircle,
+            styles.outerBeaterAnimation,
             {
-              position: 'absolute',
-              left: -30,
-              top: -30,
-              width: (this.props.radius * 2) + 60,
-              height: (this.props.radius * 2) + 60,
-              borderRadius: ((this.props.radius * 2) + 50) * 40,
+              width: outerRadius,
+              height: outerRadius,
+              borderRadius: (innerRadius + 50) * 40,
               backgroundColor: this.props.bgColorThirt,
               transform: [
               { scale: bounceValue },
@@ -418,14 +418,16 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
             },
           ]}
         >
+          {/* Middle beater animation */}
           <View
             style={[
               styles.outerCircle,
               {
-                width: (this.props.radius * 2) + 30,
-                height: (this.props.radius * 2) + 30,
-                borderRadius: ((this.props.radius * 2) + 50) * 40,
+                width: middleRadius,
+                height: middleRadius,
+                borderRadius: (innerRadius + 50) * 40,
                 backgroundColor: this.props.bgColorSecondary,
+                // zIndex: 3,
               },
             ]}
           />
@@ -436,10 +438,10 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
             styles.outerCircle,
             {
               position: 'absolute',
-              left: 0,
-              top: 0,
-              width: this.props.radius * 2,
-              height: this.props.radius * 2,
+              left: 30,
+              top: 30,
+              width: innerRadius,
+              height: innerRadius,
               borderRadius: this.props.radius,
               backgroundColor: this.props.color,
             },
@@ -452,7 +454,6 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
           {this.renderCircle(interpolationValuesCircleRotate)}
         </TouchableOpacity>
       </Animated.View>
-
     );
   }
 }
