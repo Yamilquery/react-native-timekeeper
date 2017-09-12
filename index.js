@@ -295,8 +295,7 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
           ]}
         >
           <View style={{
-            backgroundColor: '#333333',
-            // backgroundColor: '#FFF',
+            backgroundColor: '#FFF',
             borderColor: 'rgba(161, 26, 66, 1)',
             borderRadius: radius / 5,
             borderWidth: radius / 20,
