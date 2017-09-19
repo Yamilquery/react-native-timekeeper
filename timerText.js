@@ -27,6 +27,7 @@ type Props = {
   onTimeElapsed: Function,
   reverseCount: boolean,
   seconds: number,
+  startAt: number,
   subTextStyle: Text.propTypes.style | Array<Text.propTypes.style>,
   textStyle: Text.propTypes.style | Array<Text.propTypes.style>,
 }
@@ -36,6 +37,7 @@ type Default = {
   isPausable: boolean,
   onTimeElapsed: Function,
   seconds: number,
+  startAT: number,
   subTextStyle: Text.propTypes.style | Array<Text.propTypes.style>,
   textStyle: Text.propTypes.style | Array<Text.propTypes.style>,
 }
@@ -91,6 +93,14 @@ export default class TextTimeComponent extends React.Component<Default, Props, S
 
   componentDidMount = () => {
     this.refreshTime();
+  };
+
+  componentWillReceiveProps = (nextProps: Props) => {
+    if (nextProps.startAt > 0) {
+      this.setState({
+        timeReverse: nextProps.startAt,
+      });
+    }
   };
 
   componentWillUnmount = () => {

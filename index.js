@@ -40,6 +40,7 @@ export type TimerProps = {
   radius: number,
   reverseCount: boolean,
   seconds?: number,
+  startAt?: number,
   shadowColor?: string,  // opt
   subTextStyle?: Text.propTypes.style,
   textStyle?: Text.propTypes.style,
@@ -165,6 +166,7 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
     onTimeElapsed: () => null,
     reverseCount: false,
     seconds: 10,
+    startAt: 0,
     shadowColor: '#999',
     subTextStyle: null,
     textStyle: null,
@@ -193,18 +195,6 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
   componentDidMount(): void {
     this.beat();
     this.restartAnimation();
-  }
-
-  /**
-   * Should component update. Prevent any kind of rerender in the component.
-   * If we don't do this, the timer would restart.
-   * @param {TimerProps} nextProps The next props of the component
-   * @param {State} nextState The next state of the component
-   * @returns {void}
-   */
-  shouldComponentUpdate(nextProps, nextState) {
-    // return nextState.active !== this.state.active;
-    return false;
   }
 
   restartAnimation = (): void => {
@@ -364,6 +354,7 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
           textStyle={this.props.textStyle}
           subTextStyle={this.props.subTextStyle}
           seconds={this.props.seconds}
+          startAt={this.props.startAt}
           onTimeElapsed={this.props.onTimeElapsed}
           active={this.state.active}
           isPausable={this.props.isPausable}
