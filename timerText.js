@@ -91,12 +91,21 @@ export default class TextTimeComponent extends React.Component<Default, Props, S
     this.state = getInitialStateText(props);
   }
 
+  state: State = {
+    ...getInitialStateText(this.props),
+    timeReverse: this.props.startAt,
+  }
+
   componentDidMount = () => {
     this.refreshTime();
+    this.setState({
+      timeReverse: this.props.startAt,
+    });
   };
 
   componentWillReceiveProps = (nextProps: Props) => {
     if (nextProps.startAt > 0) {
+      this.state.timeReverse = nextProps.startAt;
       this.setState({
         timeReverse: nextProps.startAt,
       });
@@ -116,7 +125,13 @@ export default class TextTimeComponent extends React.Component<Default, Props, S
   }
 
   updateTime = () => {
-    const timeReverse = (this.props.reverseCount) ? this.state.timeReverse + 1 : 0;
+    if (this.props.textStyle.fontSize >= 25) {
+      console.log(this.props.startAt);
+      console.log(this.state.timeReverse);
+    }
+    const timeReverse = (this.props.reverseCount)
+      ? this.state.timeReverse + 1
+      : 0;
     const time = (this.props.reverseCount) ? this.state.time + 1 : this.state.time - 1;
     const timeText = (this.props.reverseCount) ? secondsToHms(timeReverse) : secondsToHms(time);
     const callback = (time <= 0) ? this.props.onTimeElapsed : this.refreshTime;
