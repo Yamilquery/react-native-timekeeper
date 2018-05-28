@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import {
+  Platform,
   Animated,
   Easing,
   NativeModules,
@@ -284,17 +285,23 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
             },
           ]}
         >
-          <View style={{
-            backgroundColor: '#FFF',
-            borderColor: 'rgba(161, 26, 66, 1)',
-            borderRadius: radius / 5,
-            borderWidth: radius / 20,
-            height: radius / 5,
-            left: radius - (radius / 16),
-            top: 0 - (radius / 16),
-            width: radius / 5,
-          }}
-          />
+          {
+            (Platform.IOS === 'ios')
+            ? (
+              <View style={{
+                backgroundColor: '#FFF',
+                borderColor: 'rgba(161, 26, 66, 1)',
+                borderRadius: radius / 5,
+                borderWidth: radius / 20,
+                height: radius / 5,
+                left: radius - (radius / 16),
+                top: 0 - (radius / 16),
+                width: radius / 5,
+              }}
+              />
+            )
+            : null
+          }
         </Animated.View>
       </View>
     );

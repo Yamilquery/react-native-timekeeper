@@ -125,10 +125,6 @@ export default class TextTimeComponent extends React.Component<Default, Props, S
   }
 
   updateTime = () => {
-    if (this.props.textStyle.fontSize >= 25) {
-      console.log(this.props.startAt);
-      console.log(this.state.timeReverse);
-    }
     const timeReverse = (this.props.reverseCount)
       ? this.state.timeReverse + 1
       : 0;
