@@ -286,7 +286,7 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
           ]}
         >
           {
-            (Platform.IOS === 'ios')
+            (Platform.OS === 'ios')
             ? (
               <View style={{
                 backgroundColor: '#FFF',
