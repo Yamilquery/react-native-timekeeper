@@ -142,13 +142,16 @@ export default class TextTimeComponent extends React.Component<Default, Props, S
   renderSubText() {
     const { active } = this.props;
 
+    const text1 = this.props.text1 || "Pause";
+    const text2 = this.props.text2 || "Resume";
+
     if (this.props.isPausable) {
       return (
         <Text
           numberOfLines={1} ellipsizeMode="head"
           style={[this.props.subTextStyle, active ? { opacity: 0.8 } : { opacity: 1 }]}
         >
-          {active ? 'Pause' : 'Resume'}
+          {active ? text1 : text2}
         </Text>
       );
     }
