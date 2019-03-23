@@ -358,8 +358,8 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
         ]}
       >
         <TextTimeComponent
-          text1={this.props.text1}
-          text2={this.props.text2}
+          pauseText={this.props.pauseText}
+          resumeText={this.props.resumeText}
           textStyle={this.props.textStyle}
           subTextStyle={this.props.subTextStyle}
           seconds={this.props.seconds}

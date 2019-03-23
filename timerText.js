@@ -142,8 +142,8 @@ export default class TextTimeComponent extends React.Component<Default, Props, S
   renderSubText() {
     const { active } = this.props;
 
-    const text1 = this.props.text1 || "Pause";
-    const text2 = this.props.text2 || "Resume";
+    const pauseText = this.props.pauseText || "Pause";
+    const resumeText = this.props.resumeText || "Resume";
 
     if (this.props.isPausable) {
       return (
@@ -151,7 +151,7 @@ export default class TextTimeComponent extends React.Component<Default, Props, S
           numberOfLines={1} ellipsizeMode="head"
           style={[this.props.subTextStyle, active ? { opacity: 0.8 } : { opacity: 1 }]}
         >
-          {active ? text1 : text2}
+          {active ? pauseText : resumeText}
         </Text>
       );
     }
