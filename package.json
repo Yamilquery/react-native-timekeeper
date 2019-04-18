@@ -5,9 +5,5 @@
   "main": "index.js",
   "repository": "https://github.com/Yamilquery/react-native-timekeeper.git",
   "author": "Yamil Díaz Aguirre <yamilquery@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "react": "^15.6.1",
-    "react-native": "^0.47.1"
-  }
+  "license": "MIT"
 }
