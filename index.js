@@ -278,29 +278,29 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
               width: radius,
               height: radius * 2,
               transform: [
-              { translateX: radius / 2 },
-              { rotate },
-              { translateX: -radius / 2 },
+                { translateX: radius / 2 },
+                { rotate },
+                { translateX: -radius / 2 },
               ],
             },
           ]}
         >
           {
             (Platform.OS === 'ios')
-            ? (
-              <View style={{
-                backgroundColor: '#FFF',
-                borderColor: 'rgba(161, 26, 66, 1)',
-                borderRadius: radius / 5,
-                borderWidth: radius / 20,
-                height: radius / 5,
-                left: radius - (radius / 16),
-                top: 0 - (radius / 16),
-                width: radius / 5,
-              }}
-              />
-            )
-            : null
+              ? (
+                <View style={{
+                  backgroundColor: '#FFF',
+                  borderColor: 'rgba(161, 26, 66, 1)',
+                  borderRadius: radius / 5,
+                  borderWidth: radius / 20,
+                  height: radius / 5,
+                  left: radius - (radius / 16),
+                  top: 0 - (radius / 16),
+                  width: radius / 5,
+                }}
+                />
+              )
+              : null
           }
         </Animated.View>
       </View>
@@ -331,9 +331,9 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
               borderRadius: radius,
               backgroundColor,
               transform: [
-              { translateX: radius / 2 },
-              { rotate },
-              { translateX: -radius / 2 },
+                { translateX: radius / 2 },
+                { rotate },
+                { translateX: -radius / 2 },
               ],
             },
           ]}
@@ -358,6 +358,8 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
         ]}
       >
         <TextTimeComponent
+          pauseText={this.props.pauseText}
+          resumeText={this.props.resumeText}
           textStyle={this.props.textStyle}
           subTextStyle={this.props.subTextStyle}
           seconds={this.props.seconds}
@@ -394,7 +396,7 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
           width: outerRadius,
           height: outerRadius,
           transform: [
-          { scale: timerScale },
+            { scale: timerScale },
           ],
         }}
       >
@@ -409,7 +411,7 @@ export default class PercentageCircle extends React.Component<Default, TimerProp
               borderRadius: (innerRadius + 50) * 40,
               backgroundColor: this.props.bgColorThirt,
               transform: [
-              { scale: bounceValue },
+                { scale: bounceValue },
               ],
               opacity: this.props.beat ? 1 : 0,
             },
